@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace GP.DAL.Data.Models
 {
-	public class Doctor : ModelBase
+	public class PatientPhoto : ModelBase
 	{
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
+        public int AppointmentId { get; set; }
+		public string Path { get; set; }
     }
 }
