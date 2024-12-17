@@ -8,8 +8,12 @@ namespace GP.DAL.Data.Models
 {
 	public class Measurement : ModelBase
 	{
-        public int ProccessedImageId { get; set; }
+       
         public string Type { get; set; }
         public decimal Value { get; set; }
-    }
+
+		// Foreign Key for ProcessedImage
+		public int ProcessedImageId { get; set; }
+		public ProcessedImage ProcessedImage { get; set; }
+	}
 }

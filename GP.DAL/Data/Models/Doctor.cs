@@ -10,5 +10,6 @@ namespace GP.DAL.Data.Models
 	{
         public string FirstName { get; set; }
         public string LastName { get; set; }
-    }
+		public ICollection<Appointment> Appointments { get; set; } = new HashSet<Appointment>();
+	}
 }

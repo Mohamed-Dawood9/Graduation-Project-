@@ -16,5 +16,7 @@ namespace GP.DAL.Data.Models
         public string Phone { get; set; }
         public string Email { get; set; }
         public string MedicalHistory { get; set; }
-    }
+		// One-to-Many with Appointments
+		public ICollection<Appointment> Appointments { get; set; } = new HashSet<Appointment>();
+	}
 }

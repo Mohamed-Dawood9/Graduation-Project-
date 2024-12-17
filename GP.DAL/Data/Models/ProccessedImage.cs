@@ -6,10 +6,14 @@ using System.Threading.Tasks;
 
 namespace GP.DAL.Data.Models
 {
-	public class ProccessedImage :ModelBase
+	public class ProcessedImage :ModelBase
 	{
-        public int PatientId { get; set; }
         public string Type { get; set; }
         public string Path { get; set; }
-    }
+		public int PatientPhotoId { get; set; } //foregin key for patientPhoto
+		public PatientPhoto PatientPhoto { get; set; } // Navigation Property
+
+		// One-to-Many with Measurement
+		public ICollection<Measurement> Measurements { get; set; } = new HashSet<Measurement>();
+	}
 }
