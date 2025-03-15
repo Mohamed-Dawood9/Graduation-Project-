@@ -1,0 +1,18 @@
+﻿@model PatientViewModel
+@{
+    ViewData["Title"] = "Delete";
+}
+<section class="container vh-75  ">
+
+    <h1 class="margin">Are U Sure That You Want To Delete ?</h1>
+
+
+<form asp-action="Delete" enctype="multipart/form-data">
+    <div asp-validation-summary="All"></div>
+    <partial name="PartialView/DetailsAndDeletePartial" />
+    <br />
+    <input type="submit" value="Delete" class="btn btn-danger" />
+    ||
+    <a class="btn btn-danger" asp-action="Index">Cancel</a>
+</form>
+</section>

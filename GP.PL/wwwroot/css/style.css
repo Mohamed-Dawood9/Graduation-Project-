@@ -1,0 +1,20 @@
+.nav-link {
+    color: black;
+}
+
+.background {
+    background-color: #EDEFF3;
+
+}
+
+.secBackground {
+    background-color: #EDEFF7;
+}
+
+.margin{
+    padding-top: 90px;
+    padding-left: 20px;
+}
+.upload{
+    margin-left: 13%;
+}

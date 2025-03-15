@@ -1,0 +1,70 @@
+﻿@model IEnumerable<PatientViewModel>
+@{
+    ViewData["Title"] = "Index";
+}
+
+<section class="vh-100 background ">
+
+    <h1 class="margin">All The Patients</h1>
+
+    <div class="row justify-content-center align-items-center m-3">
+        <form class="row col-10 offset-2" asp-action="Index">
+            <div class="col-8">
+                <input type="text" name="name" placeholder="Search By name" class="form-control" />
+            </div>
+            <div class="col-4">
+                <input type="submit" value="Search" class="btn btn-outline-success " />
+            </div>
+        </form>
+
+    </div>
+    <a class="btn btn-danger  fs-4 ms-5 mb-3" asp-action="Create">Create New Patient</a>
+
+    @if (Model.Count() > 0)
+    {
+        <div class="container-fluid">
+            <div class="table-responsive">
+                <table class="table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th>@Html.DisplayNameFor(e => e.Name)</th>
+                            <th>@Html.DisplayNameFor(e => e.Age)</th>
+                            <th>@Html.DisplayNameFor(e => e.Gender)</th>
+                            <th>@Html.DisplayNameFor(e => e.Email)</th>
+                            <th>@Html.DisplayNameFor(e => e.Phone)</th>
+                            <th>@Html.DisplayNameFor(e => e.Address)</th>
+                            <th>@Html.DisplayNameFor(e => e.MedicalHistory)</th>
+                            <th>View</th>
+                            <th>Update</th>
+                            <th>Delete</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var patient in Model)
+                        {
+                            <tr>
+                                <td>@patient.Name</td>
+                                <td>@patient.Age</td>
+                                <td>@(patient.Gender ? "Male" : "Female")</td>
+                                <td>@patient.Email</td>
+                                <td>@patient.Phone</td> 
+                                <td>@patient.Address</td>
+                                <td>@patient.MedicalHistory</td>
+                                <partial name="_ButtonsPartial" model="@patient.Id.ToString()" />
+                                
+                            </tr>
+                        }
+                    </tbody>
+                </table> 
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="mt-5 alert alert-warning">
+            <h3>There are No Employees</h3>
+        </div>
+    }
+
+
+</section>

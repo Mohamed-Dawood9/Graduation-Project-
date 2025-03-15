@@ -1,0 +1,22 @@
+﻿@model PatientViewModel
+@{
+    ViewData["Title"] = "Create";
+}
+
+<section class="container vh-75  ">
+
+    <h1 class="margin">Create Patients</h1>
+
+<form asp-action="Create">
+    <partial name="PartialView/CreateAndEditPartial" />
+    <br />
+    <input type="submit" value="Create" class="btn btn-info" />
+    ||
+    <a class="btn btn-danger" asp-action="Index">Back to Patients</a>
+</form>
+</section>
+
+@section ValidationOnCreateEdit {
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+}

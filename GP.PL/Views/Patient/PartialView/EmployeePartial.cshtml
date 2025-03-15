@@ -1,0 +1,41 @@
+﻿@* @model IEnumerable<Employee>
+@{
+    Layout = null; 
+}
+
+<table class="table table-striped table-hover">
+    <thead>
+        <tr>
+            <th>@Html.DisplayNameFor(e => e.Name)</th>
+            <th>@Html.DisplayNameFor(e => e.age)</th>
+            <th>@Html.DisplayNameFor(e => e.Salary)</th>
+            <th>@Html.DisplayNameFor(e => e.Email)</th>
+            <th>@Html.DisplayNameFor(e => e.Department)</th>
+            <th>@Html.DisplayNameFor(e => e.PhoneNumber)</th>
+            <th>@Html.DisplayNameFor(e => e.Address)</th>
+            <th>@Html.DisplayNameFor(e => e.IsActive)</th>
+            <th>@Html.DisplayNameFor(e => e.HireDate)</th>
+            <th>Details</th>
+            <th>Update</th>
+            <th>Delete</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var emp in Model)
+        {
+            <tr>
+                <td>@emp.Name</td>
+                <td>@emp.age</td>
+                <td>@Html.DisplayFor(e => emp.Salary)</td>
+                <td>@Html.DisplayFor(e => emp.Email)</td>
+                <td>@(emp.Department?.Name)</td>
+                <td>@emp.PhoneNumber</td>
+                <td>@emp.Address</td>
+                <td>@Html.DisplayFor(e => emp.IsActive)</td>
+                <td>@emp.HireDate</td>
+                <partial name="_ButtonsPartial" model="@emp.Id" />
+            </tr>
+        }
+
+    </tbody>
+</table> *@

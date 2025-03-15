@@ -1,0 +1,17 @@
+﻿@model PatientViewModel
+@{
+    ViewData["Title"] = "Details";
+}
+<section class="container vh-75  ">
+    <h1 class="margin">Patient Details</h1>
+<br />
+<br />
+
+<div>
+    <partial name="PartialView/DetailsAndDeletePartial" />
+    <br />
+    <a class="btn btn-danger" asp-action="Edit" asp-route-id=@Model.Id>Edit</a>||
+        <a class="btn btn-danger" asp-action="Index">Back to Patients</a>
+</div>
+</section>
+

@@ -20,12 +20,10 @@ namespace GP.DAL.Data.Configrations
 					.HasOne(a => a.Patient)
 					.WithMany(p => p.Appointments)
 					.HasForeignKey(a => a.PatientId);
-			builder
-					.HasOne(a => a.Doctor)
-					.WithMany(d => d.Appointments)
-					.HasForeignKey(a => a.DoctorId);
 
-			
-		}
-	}
+            builder.Property(p => p.CobbAngle).HasColumnType("decimal(18,2)");
+
+
+        }
+    }
 }

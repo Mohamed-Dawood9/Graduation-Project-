@@ -13,6 +13,7 @@ namespace GP.DAL.Data.Models
         public bool Gender { get; set; }
         public decimal Weight { get; set; }
         public decimal Height { get; set; }
+        public string Address { get; set; }
         public string Phone { get; set; }
         public string Email { get; set; }
         public string MedicalHistory { get; set; }

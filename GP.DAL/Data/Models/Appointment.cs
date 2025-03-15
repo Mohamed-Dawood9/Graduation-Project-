@@ -14,12 +14,17 @@ namespace GP.DAL.Data.Models
 
 		// Foreign Key for Doctor
 		public int DoctorId { get; set; }
-		public Doctor Doctor { get; set; } // Navigation Property
+		//public Doctor Doctor { get; set; } // Navigation Property
 
-		public DateOnly Date { get; set; }
-        public string Note { get; set; }
+		public DateTime Date { get; set; }
+        public ICollection<Note> Notes { get; set; } = new HashSet<Note>();
 
-        // One-to-One with PatientPhoto
-        public PatientPhoto PatientPhoto { get; set; }
-	}
+       public string OrginalPhotoPath { get; set; }
+       public string ProccessedPhotoPath { get; set; }
+       public decimal CobbAngle { get; set; }
+       public string Diagnosis { get; set; }
+
+
+
+    }
 }

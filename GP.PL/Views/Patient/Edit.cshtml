@@ -1,0 +1,21 @@
+﻿@model PatientViewModel
+@{
+    ViewData["Title"] = "Edit";
+}
+<section class="container vh-75  ">
+    <h1 class="margin">Edit Patient</h1>
+
+
+<form asp-action="Edit" enctype="multipart/form-data">
+    <div asp-validation-summary="All"></div>
+    <partial name="PartialView/CreateAndEditPartial" />
+    @* <input type="hidden" asp-for="ImageName" /> *@
+    <input type="submit" value="Save" class="btn btn-info" />
+    ||
+    <a class="btn btn-danger" asp-action="Index">Back to Patient</a>
+</form>
+</section>
+@section ValidationOnCreateEdit {
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+}
