@@ -6,25 +6,21 @@ using System.Threading.Tasks;
 
 namespace GP.DAL.Data.Models
 {
-	public class Appointment : ModelBase
-	{
-		// Foreign Key for Patient
-		public int PatientId { get; set; }
-		public Patient Patient { get; set; } // Navigation Property
+    public class Appointment : ModelBase
+    {
+        public int PatientId { get; set; }
+        public Patient Patient { get; set; }
 
-		// Foreign Key for Doctor
-		public int DoctorId { get; set; }
-		//public Doctor Doctor { get; set; } // Navigation Property
+        public int DoctorId { get; set; }
 
-		public DateTime Date { get; set; }
-        public ICollection<Note> Notes { get; set; } = new HashSet<Note>();
+        public DateTime Date { get; set; }
+        public ICollection<Note>? Notes { get; set; } = new HashSet<Note>();
 
-       public string OrginalPhotoPath { get; set; }
-       public string ProccessedPhotoPath { get; set; }
-       public decimal CobbAngle { get; set; }
-       public string Diagnosis { get; set; }
-
-
-
+        public string? OrginalPhotoPath { get; set; }
+        public string? ProcessedPhotoPath1 { get; set; } // First processed image
+        public string? ProcessedPhotoPath2 { get; set; } // Second processed image
+        public string? ProcessedPhotoPath3 { get; set; } // Third processed image
+        public decimal? CobbAngle { get; set; }
+        public string? Diagnosis { get; set; }
     }
 }

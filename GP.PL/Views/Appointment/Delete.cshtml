@@ -1,0 +1,164 @@
+﻿@model AppointmentViewModel
+@using AutoMapper;
+@inject IUnitOfWork UnitOfWork
+@inject IMapper _mapper
+
+@{
+    var currentAppointmentDate = Model.Date;
+
+    var previousAppointment = UnitOfWork.AppointmentsRepositry.GetAll()
+        .Where(a => a.PatientId == Model.PatientId && a.Date < currentAppointmentDate)
+        .OrderByDescending(a => a.Date)
+        .FirstOrDefault();
+
+    AppointmentViewModel result = previousAppointment != null
+        ? _mapper.Map<Appointment, AppointmentViewModel>(previousAppointment)
+        : null;
+}
+<section class="background mt-5 pt-5 vh-100">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <!-- Card Wrapper -->
+                <div class="card shadow-lg border-0 secBackground">
+                    <!-- Added shadow and removed border -->
+                    <div class="card-body p-4">
+                        <!-- Padding inside the card -->
+                        <div class="row">
+                            <!-- Photo on the Left -->
+                            <div class="col-md-6 d-flex align-items-center justify-content-center">
+                                <div class="text-center">
+                                    <h3 class="fw-bold mb-3">3D Spine Model</h3>
+                                    <img src="~/Images/@Model.OrginalPhotoPath" alt="3D Image" class="img-fluid rounded" style="height: 400px;">
+                                </div>
+                            </div>
+
+                            <!-- Progress Section on the Right -->
+                            <div class="col-md-6 d-flex align-items-center justify-content-center">
+                                <div class="text-center w-100">
+                                    <h4 class="fw-bold mb-4">Cobb Angle Report</h4>
+                                    <div class="row mb-4">
+                                        <div class="col-md-6">
+                                            <p class="fs-5">Cobb Angle: <span class="fw-bold text-info">@Model.CobbAngle°</span></p>
+                                            <p class="fs-5">
+                                                Diagnosis: <span class="fw-bold text-success">
+                                                    @{
+                                                        // Calculate diagnosis based on Cobb angle
+                                                        string diagnosis;
+                                                        if (Model.CobbAngle >= 80)
+                                                        {
+                                                            diagnosis = "Very-severe ";
+                                                        }
+                                                        else if (Model.CobbAngle >= 40)
+                                                        {
+                                                            diagnosis = "Severe ";
+                                                        }
+                                                        else if (Model.CobbAngle >= 25)
+                                                        {
+                                                            diagnosis = "Moderate ";
+                                                        }
+                                                        else if (Model.CobbAngle >= 10)
+                                                        {
+                                                            diagnosis = "Mild ";
+                                                        }
+                                                        else
+                                                        {
+                                                            diagnosis = "No significant scoliosis";
+                                                        }
+                                                    }
+                                                    @diagnosis
+                                                </span>
+                                            </p>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <p class="fs-5">
+                                                Last Cobb Angle: <span class="fw-bold text-danger">
+                                                    @if (result != null)
+                                                    {
+                                                        <span class="fw-bold text-danger">@result.CobbAngle°</span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span class="fw-bold text-danger">No Preivous Appointment</span>
+                                                    }
+                                                </span>
+                                            </p>
+                                            @if (result != null)
+                                            {
+                                                var previousCobbAngle = result.CobbAngle;
+                                                var currentCobbAngle = Model.CobbAngle;
+
+                                                if (previousCobbAngle != 0)
+                                                {
+                                                    // Calculate progress safely
+                                                    var progressPercentage = Math.Round(
+                                                    ((previousCobbAngle - currentCobbAngle) / previousCobbAngle * 100),
+                                                    1
+                                                    );
+                                                    var progressStatus = progressPercentage >= 0 ? "Improvement" : "Worsening";
+
+                                                    <p class="fs-5">
+                                                        Progress:
+                                                        <span class="fw-bold text-primary">
+                                                            @Math.Abs(progressPercentage)% @progressStatus
+                                                        </span>
+                                                    </p>
+                                                }
+                                                else
+                                                {
+                                                    <p class="fs-5">Progress: <span class="fw-bold text-primary">N/A (Previous Cobb Angle is 0)</span></p>
+                                                }
+                                            }
+                                            else
+                                            {
+                                                <p class="fs-5">Progress: <span class="fw-bold text-primary">N/A (No previous appointment)</span></p>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Notes Section -->
+                            <div class="row mt-4">
+                                <div class="col-12">
+                                    <h5 class="fw-bold mb-3">Notes</h5>
+                                    <div class="card bg-light p-3">
+                                        <ul class="list-group list-group-flush">
+                                            @if (Model.Notes != null)
+                                            {
+                                                foreach (var note in Model.Notes)
+                                                {
+                                                    <li class="list-group-item bg-light">@note.Content</li>
+                                                }
+                                            }
+                                            else
+                                            {
+                                                <li class="list-group-item bg-light">No notes available.</li>
+                                            }
+                                        </ul>
+                                        <div class="mt-3">
+                                            <form asp-action="AddNote" method="post">
+                                                <input type="hidden" asp-for="Id" />
+                                                <textarea readonly class="form-control" rows="3" placeholder="Add a new note..." asp-for="NewNote"></textarea>
+                                                <button type="submit" disabled class="btn btn-primary mt-2">Add Note</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br />
+        <form asp-action="Delete" enctype="multipart/form-data">
+    <div asp-validation-summary="All"></div>
+        <div class="d-flex justify-content-center align-items-center pe-4">
+        <input type="submit" value="Delete" class="btn btn-danger" />
+        ||
+        <a class="btn btn-danger" asp-action="Index">Cancel</a>
+		</div>
+        </form>
+</section>
+

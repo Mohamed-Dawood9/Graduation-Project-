@@ -1,7 +1,11 @@
 using GP.BLL;
 using GP.BLL.Interfaces;
 using GP.DAL.Data;
+using GP.DAL.Data.Models;
 using GP.PL.Helper;
+using GP_BLL.Interfaces;
+using GP_BLL.Services;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace GP.PL
@@ -14,8 +18,23 @@ namespace GP.PL
 
 			// Add services to the container.
 			builder.Services.AddControllersWithViews();
+            builder.Services.AddIdentity<ApplicationUser, IdentityRole>(config =>
+            {
+                config.User.RequireUniqueEmail = true;
+
+
+            })
+                            .AddEntityFrameworkStores<AppDbContext>()
+                            .AddDefaultTokenProviders();
+
+            builder.Services.ConfigureApplicationCookie(configure => {
+                configure.LoginPath = "/Account/SignIn";
+                configure.ExpireTimeSpan = TimeSpan.FromMinutes(1000);
+            }
+            );
             builder.Services.AddAutoMapper(M => M.AddProfile(new MappingProfile()));
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+            builder.Services.AddScoped<ISpineProcessingService, SpineProcessingService>();
 
             builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
@@ -48,13 +67,13 @@ namespace GP.PL
 			app.UseHttpsRedirection();
 			app.UseStaticFiles();
 
-			app.UseRouting();
+            app.UseRouting();
+            app.UseAuthentication();
+            app.UseAuthorization();
 
-			app.UseAuthorization();
-
-			app.MapControllerRoute(
+            app.MapControllerRoute(
 				name: "default",
-				pattern: "{controller=Home}/{action=Index}/{id?}");
+				pattern: "{controller=Patient}/{action=Index}/{id?}");
 
 			app.Run();
 		}

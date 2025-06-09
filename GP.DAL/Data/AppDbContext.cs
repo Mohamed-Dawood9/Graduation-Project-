@@ -28,6 +28,8 @@ namespace GP.DAL.Data
 		//public DbSet<Doctor> Doctors { get; set; }
 		public DbSet<Appointment> Appointments { get; set; }
 		public DbSet<Note> Notes { get; set; }
+		public DbSet<Analysis> Analyses { get; set; }
+		public DbSet<Keypoint> KeyPoints { get; set; }
         //public DbSet<PatientPhoto> PatientPhotos { get; set; }
         //public DbSet<ProcessedImage> ProcessedImages { get; set; }
 		

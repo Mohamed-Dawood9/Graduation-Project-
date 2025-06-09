@@ -1,3 +1,16 @@
+.group-box {
+    border: 1px medium #dee2e6;
+    border-radius: 6px;
+    padding: 8px;
+    margin-left: 8px;
+    margin-right: 8px;
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    background-color: transparent;
+}
+
+
 .nav-link {
     color: black;
 }
@@ -18,3 +31,57 @@
 .upload{
     margin-left: 13%;
 }
+.vh-50 {
+    height: 50vh !important;
+}
+.profile-container {
+    max-width: 900px;
+    margin: 70px auto;
+    background: white;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.profile-img {
+    width: 160px;
+    height: 160px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 5px solid #007bff;
+}
+
+.profile-details {
+    margin-top: 25px;
+    text-align: left;
+    font-size: 18px;
+}
+
+    .profile-details p {
+        margin: 12px 0;
+        display: flex;
+        align-items: center;
+        font-size: 18px;
+        color: #333;
+    }
+
+        .profile-details p i {
+            margin-right: 10px;
+            color: #007bff;
+        }
+
+.edit-btn {
+    margin-top: 25px;
+    font-size: 18px;
+    padding: 12px 25px;
+    background: #007bff;
+    border: none;
+    color: white;
+    border-radius: 8px;
+    transition: 0.3s;
+}
+
+    .edit-btn:hover {
+        background: #0056b3;
+    }

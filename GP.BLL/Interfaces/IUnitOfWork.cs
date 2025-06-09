@@ -12,8 +12,9 @@ namespace GP.BLL.Interfaces
 
        public IPatientsInterface PatientsRepositry { get; set; }
        public IAppointmentInterface AppointmentsRepositry { get; set; }
+       public INotesInterface NotesRepositry { get; set; }
 
-
+       public IAnalysisInterFace AnalysisRepositry { get; set; }
         int Complete();
         
     }

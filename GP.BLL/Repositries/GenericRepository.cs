@@ -19,12 +19,18 @@ namespace Demo.BLL.Repositories
         }
         public IEnumerable<T> GetAll()
         {
-            
-                return _DbContext.Set<T>().AsNoTracking().ToList();
+            if (typeof(T) == typeof(Appointment))
+            {
+                return (IEnumerable<T>)_DbContext.Appointments.Include(e => e.Notes).AsNoTracking().ToList();
+            }
+            return _DbContext.Set<T>().AsNoTracking().ToList();
         }
 
         public T GetById(int id)
-            => _DbContext.Find<T>(id);
+        
+           => _DbContext.Find<T>(id);
+        
+
         public void Add(T entity)
         {
             _DbContext.Set<T>().Add(entity);

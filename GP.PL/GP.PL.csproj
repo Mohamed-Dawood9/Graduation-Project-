@@ -18,4 +18,8 @@
     <ProjectReference Include="..\GP.BLL\GP.BLL.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\processed_images\" />
+  </ItemGroup>
+
 </Project>

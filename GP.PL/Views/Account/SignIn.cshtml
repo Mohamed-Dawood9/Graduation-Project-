@@ -1,0 +1,42 @@
+﻿@model SignInViewModel
+@{
+    ViewData["Title"] = "SignIn";
+    Layout = "~/Views/Shared/_AuthLayout.cshtml";
+}
+
+<form asp-action="SignIn" method="post">
+    <h1 class="lead fw-normal mb-5 text-center fs-3 ">Login </h1>
+    <div class="form-outline mb-4 d-flex align-items-center">
+        <label class="form-label me-3 " style="min-width: 120px;" for="Email">
+            Email
+        </label>
+        <input type="email" asp-for="Email" class="form-control form-control-lg" />
+    </div>
+
+    <div class="form-outline mb-4 d-flex align-items-center">
+        <label class="form-label me-3" for="Password"
+               style="min-width: 120px;">Password</label>
+        <input type="password" asp-for="Password" class="form-control form-control-lg" />
+
+    </div>
+    <div class="form-outline mb-4 d-flex align-items-center">
+    <input asp-for="RememberMe" class="checkbox">
+    <span>Remember Me</span>
+    </div>
+
+    <div class="pt-1 mb-4">
+        <button class="btn btn-dark btn-lg btn-block" type="submit">Login</button>
+    </div>
+
+    <a class="small text-muted"  asp-action="ForgetPassowrd">Forgot password?</a>
+    <p class="mb-5 pb-lg-2 text-muted">
+        Don't have an account? <a  asp-action="SignUp"
+                                  style="color: #000000;">Register here</a>
+    </p>
+
+</form>
+
+@section ValidationOnCreateEdit {
+	<partial name="_ValidationScriptsPartial" />
+}
+

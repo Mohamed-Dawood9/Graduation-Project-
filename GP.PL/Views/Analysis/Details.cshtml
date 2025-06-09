@@ -1,0 +1,236 @@
+﻿@model GP.PL.VIewModel.AnalysisViewModel
+@using AutoMapper;
+@inject IUnitOfWork UnitOfWork
+@inject IMapper _mapper
+
+@{
+    var currentAnalysisDate = Model.Date;
+
+    var previousAnalysis = UnitOfWork.AnalysisRepositry.GetAll()
+        .Where(a => a.PatientId == Model.PatientId && a.Date < currentAnalysisDate)
+        .OrderByDescending(a => a.Date)
+        .FirstOrDefault();
+
+    AnalysisViewModel result = previousAnalysis != null
+        ? _mapper.Map<Analysis, AnalysisViewModel>(previousAnalysis)
+        : null;
+}
+
+@functions {
+    string GetMetricDescription(string metricName, float value)
+    {
+        switch (metricName)
+        {
+            case "HDI-S":
+            case "HDI-A":
+            case "HDI-T":
+                if (value <= 3) return "Normal";
+                if (value <= 5) return "Mild Asymmetry";
+                return "Severe Asymmetry";
+
+            case "FAI-C7":
+                if (value <= 3) return "Normal";
+                if (value <= 6) return "Mild Asymmetry";
+                return "Severe Asymmetry";
+
+            case "FAI-A":
+            case "FAI-T":
+                if (value <= 2) return "Normal";
+                if (value <= 4) return "Mild Asymmetry";
+                return "Severe Asymmetry";
+
+            default:
+                return "Unknown";
+        }
+    }
+}
+
+<section class="background mt-5 pt-5">
+    <div class="container-fluid">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <div class="card shadow-lg border-0 secBackground">
+                    <div class="card-body p-4">
+                        <div class="row">
+                            <!-- Visualizations Section -->
+                            <div class="col-12">
+                                <h3 class="fw-bold mb-3 text-center">Back Analysis Visualizations</h3>
+                                <div class="row">
+                                    <!-- Original Image -->
+                                    <div class="col-md-6 mb-4">
+                                        <div class="text-center">
+                                            <h5 class="fw-bold mb-2">Original Back Image</h5>
+                                            @if (!string.IsNullOrEmpty(Model.OriginalPhotoPath))
+                                            {
+                                                <img src="~/images/@Model.OriginalPhotoPath" alt="Original Image" class="img-fluid" style="max-height: 400px;" />
+                                            }
+                                            else
+                                            {
+                                                <p class="text-muted">Original image not available.</p>
+                                            }
+                                        </div>
+                                    </div>
+                                    <!-- Processed Image -->
+                                    <div class="col-md-6 mb-4">
+                                        <div class="text-center">
+                                            <h5 class="fw-bold mb-2">Annotated Back Image</h5>
+                                            @if (!string.IsNullOrEmpty(Model.ProcessedPhotoPath))
+                                            {
+                                                <img src="@Url.Content(Model.ProcessedPhotoPath)" alt="Processed Image" class="img-fluid" style="max-height: 400px;" />
+                                            }
+                                            else
+                                            {
+                                                <p class="text-muted">Annotated image not available.</p>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row mt-4">
+                            <!-- Metrics Section -->
+                            <div class="col-12">
+                                <div class="text-center w-100">
+                                    <h4 class="fw-bold mb-4">Posture Analysis Report</h4>
+                                    <table class="table table-bordered table-striped">
+                                        <thead class="table-dark">
+                                            <tr>
+                                                <th>Metric</th>
+                                                <th>Current Value (%)</th>
+                                                <th>Description</th>
+                                                <th>Previous Value (%)</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>HDI-S (Shoulders)</td>
+                                                <td>@Model.HDI_S.ToString("F2")</td>
+                                                <td>@GetMetricDescription("HDI-S", Model.HDI_S)</td>
+                                                <td>@(result != null ? result.HDI_S.ToString("F2") : "N/A")</td>
+                                            </tr>
+                                            <tr>
+                                                <td>HDI-A (Underarms)</td>
+                                                <td>@Model.HDI_A.ToString("F2")</td>
+                                                <td>@GetMetricDescription("HDI-A", Model.HDI_A)</td>
+                                                <td>@(result != null ? result.HDI_A.ToString("F2") : "N/A")</td>
+                                            </tr>
+                                            <tr>
+                                                <td>HDI-T (Trunk Shift)</td>
+                                                <td>@Model.HDI_T.ToString("F2")</td>
+                                                <td>@GetMetricDescription("HDI-T", Model.HDI_T)</td>
+                                                <td>@(result != null ? result.HDI_T.ToString("F2") : "N/A")</td>
+                                            </tr>
+                                            <tr>
+                                                <td>FAI-C7 (C7 Centering)</td>
+                                                <td>@Model.FAI_C7.ToString("F2")</td>
+                                                <td>@GetMetricDescription("FAI-C7", Model.FAI_C7)</td>
+                                                <td>@(result != null ? result.FAI_C7.ToString("F2") : "N/A")</td>
+                                            </tr>
+                                            <tr>
+                                                <td>FAI-A (Underarm Asymmetry)</td>
+                                                <td>@Model.FAI_A.ToString("F2")</td>
+                                                <td>@GetMetricDescription("FAI-A", Model.FAI_A)</td>
+                                                <td>@(result != null ? result.FAI_A.ToString("F2") : "N/A")</td>
+                                            </tr>
+                                            <tr>
+                                                <td>FAI-T (Trunk Asymmetry)</td>
+                                                <td>@Model.FAI_T.ToString("F2")</td>
+                                                <td>@GetMetricDescription("FAI-T", Model.FAI_T)</td>
+                                                <td>@(result != null ? result.FAI_T.ToString("F2") : "N/A")</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+
+                                    <!-- Progress Comparison -->
+                                    @if (result != null)
+                                    {
+                                        var previousPOTSI = result.POTSI;
+                                        var currentPOTSI = Model.POTSI;
+
+                                        if (previousPOTSI != 0)
+                                        {
+                                            var progressPercentage = Math.Round(((previousPOTSI - currentPOTSI) / previousPOTSI * 100), 1);
+                                            var progressStatus = progressPercentage >= 0 ? "Improvement" : "Worsening";
+                                            var progressBarColor = progressPercentage >= 0 ? "bg-info" : "bg-danger";
+
+                                            <p class="fs-5">
+                                                Previous POTSI: <span class="fw-bold text-danger">@result.POTSI.ToString("F2")%</span>
+                                            </p>
+                                            <p class="fs-5">
+                                                Progress: <span class="fw-bold text-primary">@Math.Abs(progressPercentage)% @progressStatus</span>
+                                            </p>
+                                            <div class="progress my-4" style="height: 25px;">
+                                                <div class="progress-bar @progressBarColor"
+                                                     role="progressbar"
+                                                     style="width: @Math.Abs(progressPercentage)%;"
+                                                     aria-valuenow="@Math.Abs(progressPercentage)"
+                                                     aria-valuemin="0"
+                                                     aria-valuemax="100">
+                                                    @Math.Abs(progressPercentage)%
+                                                </div>
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <p class="fs-5">Previous POTSI: <span class="fw-bold text-danger">N/A (Previous POTSI is 0)</span></p>
+                                            <p class="fs-5">Progress: <span class="fw-bold text-primary">N/A</span></p>
+                                            <div class="progress my-4" style="height: 25px;">
+                                                <div class="progress-bar bg-secondary" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                                                    0%
+                                                </div>
+                                            </div>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <p class="fs-5">Previous POTSI: <span class="fw-bold text-danger">No Previous Analysis</span></p>
+                                        <p class="fs-5">Progress: <span class="fw-bold text-primary">N/A</span></p>
+                                        <div class="progress my-4" style="height: 25px;">
+                                            <div class="progress-bar bg-secondary" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                                                0%
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Notes Section -->
+                        <div class="row mt-4">
+                            <div class="col-12">
+                                <h5 class="fw-bold mb-3">Notes</h5>
+                                <div class="card bg-light p-3">
+                                    <ul class="list-group list-group-flush">
+                                        @if (Model.Notes != null && Model.Notes.Any())
+                                        {
+                                            foreach (var note in Model.Notes)
+                                            {
+                                                <li class="list-group-item bg-light">@note.Content</li>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <li class="list-group-item bg-light">No notes available.</li>
+                                        }
+                                    </ul>
+                                    <div class="mt-3">
+                                        <form asp-action="AddNote" method="post">
+                                            <input type="hidden" asp-for="Id" />
+                                            <textarea class="form-control" rows="3" placeholder="Add a new note..." asp-for="NewNote"></textarea>
+                                            <button type="submit" class="btn btn-primary mt-2">Add Note</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br />
+    <div class="d-flex justify-content-center align-items-center py-4">
+        <a class="btn btn-danger" asp-route-patientId="@Model.PatientId" asp-action="Index">Back</a>
+    </div>
+</section>

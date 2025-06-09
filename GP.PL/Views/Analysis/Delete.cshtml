@@ -1,0 +1,51 @@
+﻿@model GP.PL.VIewModel.AnalysisViewModel
+
+<section class="background mt-5 pt-5 vh-100">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <div class="card shadow-lg border-0 secBackground">
+                    <div class="card-body p-4">
+                        <h3 class="fw-bold mb-3 text-center">Delete Analysis</h3>
+                        <p class="text-center">Are you sure you want to delete this analysis from @Model.Date.ToShortDateString()?</p>
+                        <div class="row">
+                            <div class="col-md-6 d-flex align-items-center justify-content-center">
+                                <div class="text-center">
+                                    <h5 class="fw-bold mb-2">Original Back Image</h5>
+                                    @if (!string.IsNullOrEmpty(Model.OriginalPhotoPath))
+                                    {
+                                        <img src="@Url.Content(Model.OriginalPhotoPath)" alt="Original Image" class="img-fluid" style="max-height: 400px;" />
+                                    }
+                                    else
+                                    {
+                                        <p class="text-muted">Original image not available.</p>
+                                    }
+                                </div>
+                            </div>
+                            <div class="col-md-6 d-flex align-items-center justify-content-center">
+                                <div class="text-center">
+                                    <h5 class="fw-bold mb-2">Annotated Back Image</h5>
+                                    @if (!string.IsNullOrEmpty(Model.ProcessedPhotoPath))
+                                    {
+                                        <img src="@Url.Content(Model.ProcessedPhotoPath)" alt="Processed Image" class="img-fluid" style="max-height: 400px;" />
+                                    }
+                                    else
+                                    {
+                                        <p class="text-muted">Annotated image not available.</p>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                        <form asp-action="Delete" method="post">
+                            <input type="hidden" asp-for="Id" />
+                            <div class="d-flex justify-content-center align-items-center py-4">
+                                <input type="submit" value="Delete" class="btn btn-danger" />
+                                ||
+                                <a class="btn btn-secondary" asp-action="Index" asp-route-patientId="@Model.PatientId">Cancel</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+</section>

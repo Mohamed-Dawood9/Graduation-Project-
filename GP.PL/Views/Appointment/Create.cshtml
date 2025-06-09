@@ -1,0 +1,22 @@
+﻿@model AppointmentViewModel
+<div class="vh-50 d-flex justify-content-center align-items-center ">
+<div class="upload w-50">
+    <form asp-action="Create"  enctype="multipart/form-data">
+        <div class="form-group">
+            <label class="col-form-label" asp-for="@Model.Image"></label>
+            <input class="form-control" asp-for="@Model.Image" type="file" />
+            <span asp-validation-for="@Model.Image" class="text-danger"></span>
+        </div>
+            <input type="hidden" asp-for="PatientId" />
+        @* <div class="form-group">
+        <label class="col-form-label" asp-for="NewAppointment.Date"></label>
+        <input class="form-control" asp-for="NewAppointment.Date" type="datetime-local" readonly />
+        <span asp-validation-for="NewAppointment.Date" class="text-danger"></span>
+        </div> *@
+        <div class="py-2"></div>
+            <input type="submit" value="Create" class="btn btn-info" />
+            ||
+            <a class="btn btn-danger" asp-action="Index" asp-route-patientId="@Model.PatientId">Back to Patients</a>
+    </form>
+</div>
+</div>

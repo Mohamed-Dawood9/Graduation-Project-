@@ -1,0 +1,229 @@
+﻿@model AppointmentViewModel
+@using AutoMapper;
+@inject IUnitOfWork UnitOfWork
+@inject IMapper _mapper
+
+@{
+    var currentAppointmentDate = Model.Date;
+
+    var previousAppointment = UnitOfWork.AppointmentsRepositry.GetAll()
+        .Where(a => a.PatientId == Model.PatientId && a.Date < currentAppointmentDate)
+        .OrderByDescending(a => a.Date)
+        .FirstOrDefault();
+
+    AppointmentViewModel result = previousAppointment != null
+        ? _mapper.Map<Appointment, AppointmentViewModel>(previousAppointment)
+        : null;
+}
+<section class="background mt-5 pt-5 ">
+    <div class="container-fluid">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <!-- Card Wrapper -->
+                <div class="card shadow-lg border-0 secBackground">
+                    <div class="card-body p-4">
+                        <div class="row">
+                            <div class="col-12">
+                                <h3 class="fw-bold mb-3 text-center">Spine Visualizations</h3>
+                                <div class="row">
+                                    <div class="col-md-6 mb-4">
+                                        <div class="text-center">
+                                            <h5 class="fw-bold mb-2">Original 3D Spine Model</h5>
+                                            @if (!string.IsNullOrEmpty(Model.OrginalPhotoPath))
+                                            {
+                                                <img src="~/images/@Model.OrginalPhotoPath" height="400px" />
+                                            }
+                                            else
+                                            {
+                                                <p class="text-muted">Original model not available.</p>
+                                            }
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 mb-4">
+                                        <div class="text-center">
+                                            <h5 class="fw-bold mb-2">Preprocessed 3D Model</h5>
+                                            @if (!string.IsNullOrEmpty(Model.ProcessedPhotoPath1))
+                                            {
+                                                <iframe src="@Url.Content(@Model.ProcessedPhotoPath1)" width="100%" height="400px" frameborder="0"></iframe>
+                                            }
+                                            else
+                                            {
+                                                <p class="text-muted">Visualization not available.</p>
+                                            }
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 mb-4">
+                                        <div class="text-center">
+                                            <h5 class="fw-bold mb-2">Heatmap Surface Topography</h5>
+                                            @if (!string.IsNullOrEmpty(Model.ProcessedPhotoPath2))
+                                            {
+                                                <iframe src="@Url.Content(@Model.ProcessedPhotoPath2)" width="100%" height="400px" frameborder="0"></iframe>
+                                            }
+                                            else
+                                            {
+                                                <p class="text-muted">Visualization not available.</p>
+                                            }
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 mb-4">
+                                        <div class="text-center">
+                                            <h5 class="fw-bold mb-2">Fitted Spine onto Vertebrae Points</h5>
+                                            @if (!string.IsNullOrEmpty(Model.ProcessedPhotoPath3))
+                                            {
+                                                <iframe src="@Url.Content(@Model.ProcessedPhotoPath3)" width="100%" height="400px" frameborder="0"></iframe>
+                                            }
+                                            else
+                                            {
+                                                <p class="text-muted">Visualization not available.</p>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row mt-4">
+                            <div class="col-12">
+                                <div class="text-center w-100">
+                                    <h4 class="fw-bold mb-4">Cobb Angle Report</h4>
+                                    <div class="row mb-4">
+                                        <div class="col-md-6">
+                                            <p class="fs-5">Cobb Angle: <span class="fw-bold text-info">@Model.CobbAngle°</span></p>
+                                            <p class="fs-5">
+                                                Diagnosis: <span class="fw-bold text-success">
+                                                    @{
+                                                        string diagnosis;
+                                                        if (Model.CobbAngle >= 80)
+                                                        {
+                                                            diagnosis = "Very-severe scoliosis";
+                                                        }
+                                                        else if (Model.CobbAngle >= 40)
+                                                        {
+                                                            diagnosis = "Severe scoliosis";
+                                                        }
+                                                        else if (Model.CobbAngle >= 25)
+                                                        {
+                                                            diagnosis = "Moderate scoliosis";
+                                                        }
+                                                        else if (Model.CobbAngle >= 10)
+                                                        {
+                                                            diagnosis = "Mild scoliosis";
+                                                        }
+                                                        else
+                                                        {
+                                                            diagnosis = "No significant scoliosis";
+                                                        }
+                                                    }
+                                                    @diagnosis
+                                                </span>
+                                            </p>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <p class="fs-5">
+                                                Last Cobb Angle:
+                                                @if (result != null)
+                                                {
+                                                    <span class="fw-bold text-danger">@result.CobbAngle°</span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="fw-bold text-danger">No Previous Appointment</span>
+                                                }
+                                            </p>
+                                            @if (result != null)
+                                            {
+                                                var previousCobbAngle = result.CobbAngle;
+                                                var currentCobbAngle = Model.CobbAngle;
+
+                                                if (previousCobbAngle != 0)
+                                                {
+                                                    var progressPercentage = Math.Round(
+                                                    ((previousCobbAngle - currentCobbAngle) / previousCobbAngle * 100),
+                                                    1
+                                                    );
+                                                    var progressStatus = progressPercentage >= 0 ? "Improvement" : "Worsening";
+                                                    var progressBarColor = progressPercentage >= 0 ? "bg-info" : "bg-danger";
+
+                                                    <p class="fs-5">
+                                                        Progress:
+                                                        <span class="fw-bold text-primary">
+                                                            @Math.Abs(progressPercentage)% @progressStatus
+                                                        </span>
+                                                    </p>
+                                                    <div class="progress my-4" style="height: 25px;">
+                                                        <div class="progress-bar @progressBarColor"
+                                                             role="progressbar"
+                                                             style="width: @Math.Abs(progressPercentage)%;"
+                                                             aria-valuenow="@Math.Abs(progressPercentage)"
+                                                             aria-valuemin="0"
+                                                             aria-valuemax="100">
+                                                            @Math.Abs(progressPercentage)%
+                                                        </div>
+                                                    </div>
+                                                }
+                                                else
+                                                {
+                                                    <p class="fs-5">Progress: <span class="fw-bold text-primary">N/A (Previous Cobb Angle is 0)</span></p>
+                                                }
+                                            }
+                                            else
+                                            {
+                                                <p class="fs-5">Progress: <span class="fw-bold text-primary">N/A (No previous appointment)</span></p>
+                                                <div class="progress my-4" style="height: 25px;">
+                                                    <div class="progress-bar bg-secondary" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                                                        0%
+                                                    </div>
+                                                </div>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row mt-4">
+                            <div class="col-12">
+                                <h5 class="fw-bold mb-3">Notes</h5>
+                                <div class="card bg-light p-3">
+                                    <ul class="list-group list-group-flush">
+                                        @if (Model.Notes != null && Model.Notes.Any())
+                                        {
+                                            foreach (var note in Model.Notes)
+                                            {
+                                                <li class="list-group-item bg-light d-flex justify-content-between align-items-center">
+                                                    <span>@note.Content</span>
+                                                    <form asp-action="DeleteNote" method="post" class="d-inline">
+                                                        <input type="hidden" name="noteId" value="@note.Id" />
+                                                        <input type="hidden" name="appointmentId" value="@Model.Id" />
+                                                        <button type="submit" class="btn btn-sm btn-danger" title="Delete Note">
+                                                            <span>&times;</span>
+                                                        </button>
+                                                    </form>
+                                                </li>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <li class="list-group-item bg-light">No notes available.</li>
+                                        }
+                                    </ul>
+                                    <div class="mt-3">
+                                        <form asp-action="AddNote" method="post">
+                                            <input type="hidden" asp-for="Id" />
+                                            <textarea class="form-control" rows="3" placeholder="Add a new note..." asp-for="NewNote"></textarea>
+                                            <button type="submit" class="btn btn-primary mt-2">Add Note</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br />
+    <div class="d-flex justify-content-center align-items-center py-4">
+        <a class="btn btn-danger" asp-route-patientId="@Model.PatientId" asp-action="Index">Back</a>
+    </div>
+</section>

@@ -22,6 +22,54 @@ namespace GP.DAL.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
+            modelBuilder.Entity("GP.DAL.Data.Models.Analysis", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("DoctorId")
+                        .HasColumnType("int");
+
+                    b.Property<float>("FAI_A")
+                        .HasColumnType("real");
+
+                    b.Property<float>("FAI_C7")
+                        .HasColumnType("real");
+
+                    b.Property<float>("FAI_T")
+                        .HasColumnType("real");
+
+                    b.Property<float>("HDI_A")
+                        .HasColumnType("real");
+
+                    b.Property<float>("HDI_S")
+                        .HasColumnType("real");
+
+                    b.Property<float>("HDI_T")
+                        .HasColumnType("real");
+
+                    b.Property<string>("OriginalPhotoPath")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("PatientId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ProcessedPhotoPath")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PatientId");
+
+                    b.ToTable("Analyses");
+                });
+
             modelBuilder.Entity("GP.DAL.Data.Models.ApplicationUser", b =>
                 {
                     b.Property<string>("Id")
@@ -75,6 +123,9 @@ namespace GP.DAL.Migrations
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("bit");
 
+                    b.Property<string>("ProfilePhoto")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
 
@@ -106,28 +157,31 @@ namespace GP.DAL.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<decimal>("CobbAngle")
+                    b.Property<decimal?>("CobbAngle")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Diagnosis")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("DoctorId")
                         .HasColumnType("int");
 
                     b.Property<string>("OrginalPhotoPath")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("PatientId")
                         .HasColumnType("int");
 
-                    b.Property<string>("ProccessedPhotoPath")
-                        .IsRequired()
+                    b.Property<string>("ProcessedPhotoPath1")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ProcessedPhotoPath2")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ProcessedPhotoPath3")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -135,6 +189,34 @@ namespace GP.DAL.Migrations
                     b.HasIndex("PatientId");
 
                     b.ToTable("Appointments");
+                });
+
+            modelBuilder.Entity("GP.DAL.Data.Models.Keypoint", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("AnalysisId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<float>("X")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Y")
+                        .HasColumnType("real");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AnalysisId");
+
+                    b.ToTable("KeyPoints");
                 });
 
             modelBuilder.Entity("GP.DAL.Data.Models.Note", b =>
@@ -145,7 +227,10 @@ namespace GP.DAL.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<int>("AppointmentId")
+                    b.Property<int?>("AnalysisId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("AppointmentId")
                         .HasColumnType("int");
 
                     b.Property<string>("Content")
@@ -153,6 +238,8 @@ namespace GP.DAL.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("AnalysisId");
 
                     b.HasIndex("AppointmentId");
 
@@ -337,6 +424,17 @@ namespace GP.DAL.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("GP.DAL.Data.Models.Analysis", b =>
+                {
+                    b.HasOne("GP.DAL.Data.Models.Patient", "Patient")
+                        .WithMany()
+                        .HasForeignKey("PatientId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Patient");
+                });
+
             modelBuilder.Entity("GP.DAL.Data.Models.Appointment", b =>
                 {
                     b.HasOne("GP.DAL.Data.Models.Patient", "Patient")
@@ -348,13 +446,28 @@ namespace GP.DAL.Migrations
                     b.Navigation("Patient");
                 });
 
-            modelBuilder.Entity("GP.DAL.Data.Models.Note", b =>
+            modelBuilder.Entity("GP.DAL.Data.Models.Keypoint", b =>
                 {
-                    b.HasOne("GP.DAL.Data.Models.Appointment", "Appointment")
-                        .WithMany("Notes")
-                        .HasForeignKey("AppointmentId")
+                    b.HasOne("GP.DAL.Data.Models.Analysis", "Analysis")
+                        .WithMany("Keypoints")
+                        .HasForeignKey("AnalysisId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Analysis");
+                });
+
+            modelBuilder.Entity("GP.DAL.Data.Models.Note", b =>
+                {
+                    b.HasOne("GP.DAL.Data.Models.Analysis", "Analysis")
+                        .WithMany("Notes")
+                        .HasForeignKey("AnalysisId");
+
+                    b.HasOne("GP.DAL.Data.Models.Appointment", "Appointment")
+                        .WithMany("Notes")
+                        .HasForeignKey("AppointmentId");
+
+                    b.Navigation("Analysis");
 
                     b.Navigation("Appointment");
                 });
@@ -408,6 +521,13 @@ namespace GP.DAL.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("GP.DAL.Data.Models.Analysis", b =>
+                {
+                    b.Navigation("Keypoints");
+
+                    b.Navigation("Notes");
                 });
 
             modelBuilder.Entity("GP.DAL.Data.Models.Appointment", b =>

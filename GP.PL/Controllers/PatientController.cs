@@ -2,10 +2,13 @@
 using GP.BLL.Interfaces;
 using GP.DAL.Data.Models;
 using GP.PL.VIewModel;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GP.PL.Controllers
 {
+    [AutoValidateAntiforgeryToken]
+    [Authorize]
     public class PatientController : Controller
     {
        

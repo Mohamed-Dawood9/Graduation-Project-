@@ -12,5 +12,6 @@ namespace GP.DAL.Data.Models
 		public string Fname { get; set; }
 		public string Lname { get; set; }
 		public bool IsAgree { get; set; }
-	}
+        public string? ProfilePhoto { get; set; }
+    }
 }

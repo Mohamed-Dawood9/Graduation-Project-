@@ -10,7 +10,7 @@
     <div class="row justify-content-center align-items-center m-3">
         <form class="row col-10 offset-2" asp-action="Index">
             <div class="col-8">
-                <input type="text" name="name" placeholder="Search By name" class="form-control" />
+                <input type="text" name="searchInp" id="searchInp" placeholder="Search By name" class="form-control" />
             </div>
             <div class="col-4">
                 <input type="submit" value="Search" class="btn btn-outline-success " />
@@ -34,7 +34,8 @@
                             <th>@Html.DisplayNameFor(e => e.Phone)</th>
                             <th>@Html.DisplayNameFor(e => e.Address)</th>
                             <th>@Html.DisplayNameFor(e => e.MedicalHistory)</th>
-                            <th>View</th>
+                            <th>3D</th>
+                            <th>Analysis</th>
                             <th>Update</th>
                             <th>Delete</th>
                         </tr>
@@ -50,6 +51,8 @@
                                 <td>@patient.Phone</td> 
                                 <td>@patient.Address</td>
                                 <td>@patient.MedicalHistory</td>
+                                <td><a class="btn btn-primary" asp-controller="Appointment" asp-action="Index" asp-route-patientId="@patient.Id"><i class="fas fa-eye mx-1"></i>3D</a></td>
+                                <td><a class="btn btn-primary" asp-controller="Analysis" asp-action="Index" asp-route-patientId="@patient.Id"><i class="fas fa-eye mx-1"></i>Analysis</a></td>
                                 <partial name="_ButtonsPartial" model="@patient.Id.ToString()" />
                                 
                             </tr>

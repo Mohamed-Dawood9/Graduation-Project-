@@ -1,0 +1,141 @@
+﻿@model UserViewModel
+
+@{
+    ViewData["Title"] = "Profile";
+}
+
+<div class="container">
+    <div class="profile-container">
+        <img src="~/Images/@(string.IsNullOrEmpty(Model.ProfilePhoto) ? "default_profile_pic.jpg" : Model.ProfilePhoto)"
+             alt="Profile Image"
+             class="profile-img mb-3"
+             id="profileImage">        <h2 class="fw-bold">@Model.Fname @Model.Lname</h2>
+        <div class="profile-details">
+            <p><i class="fas fa-user"></i> <strong>First Name:  </strong>  @Model.Fname</p>
+            <p><i class="fas fa-user"></i> <strong>Last Name:  </strong>  @Model.Lname</p>
+            <p><i class="fas fa-envelope"></i> <strong>Account:  </strong>  @Model.Email</p>
+        </div>
+        <div class="container">
+            <div class="profile-container">
+                <!-- ... existing profile content ... -->
+                <button class="edit-btn"
+                        data-bs-toggle="modal"
+                        data-bs-target="#editProfileModal">
+                    Edit Profile
+                </button>
+                <button class="edit-btn btn-secondary"
+                        data-bs-toggle="modal"
+                        data-bs-target="#changePasswordModal">
+                    Change Password
+                </button>
+                <button class="edit-btn btn-info"
+                        data-bs-toggle="modal"
+                        data-bs-target="#changeImageModal">
+                    Change Profile Picture
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Profile Modal -->
+<div class="modal fade" id="editProfileModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Edit Profile</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form asp-controller="Account" asp-action="UpdateProfile" method="post">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">First Name</label>
+                        <input asp-for="Fname" class="form-control">
+                        <span asp-validation-for="Fname" class="text-danger"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Last Name</label>
+                        <input asp-for="Lname" class="form-control">
+                        <span asp-validation-for="Lname" class="text-danger"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Email</label>
+                        <input asp-for="Email" class="form-control">
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-success">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Change Password Modal -->
+<div class="modal fade" id="changePasswordModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Change Password</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form asp-controller="Account" asp-action="ChangePassword" method="post">
+                @Html.AntiForgeryToken()
+                <input type="hidden" asp-for="Fname" />
+                <input type="hidden" asp-for="Lname" />
+                <input type="hidden" asp-for="Email" />
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Current Password</label>
+                        <input asp-for="ChangePassword.CurrentPassword" type="password" class="form-control">
+                        <span asp-validation-for="ChangePassword.CurrentPassword" class="text-danger"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">New Password</label>
+                        <input asp-for="ChangePassword.NewPassword" type="password" class="form-control">
+                        <span asp-validation-for="ChangePassword.NewPassword" class="text-danger"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Confirm New Password</label>
+                        <input asp-for="ChangePassword.ConfirmPassword" type="password" class="form-control">
+                        <span asp-validation-for="ChangePassword.ConfirmPassword" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-success">Update Password</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Change Profile Picture Modal -->
+<div class="modal fade" id="changeImageModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Change Profile Picture</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form asp-controller="Account" asp-action="UpdateProfileImage" method="post" enctype="multipart/form-data">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Upload New Profile Picture</label>
+                        <input asp-for="Image" type="file" class="form-control">
+                        <span asp-validation-for="ProfilePhoto" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-success">Update Picture</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <partial name="_ValidationScriptsPartial" />
+}

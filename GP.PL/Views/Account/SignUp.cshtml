@@ -1,0 +1,54 @@
+﻿@model SingUpViewModel
+@{
+    ViewData["Title"] = "SignUp";
+    Layout = "~/Views/Shared/_AuthLayout.cshtml";
+}
+
+<form asp-action="SignUp" method="post">
+    <h1 class="lead fw-normal mb-5 text-center fs-3">Register</h1>
+
+    <!-- Input Fields -->
+    <div class="form-outline mb-4 d-flex align-items-center">
+        <label class="form-label me-3" for="FName" style="min-width: 120px;">First Name</label>
+        <input type="text" asp-for="FName" class="form-control form-control-lg"  />
+    </div>
+    <div class="form-outline mb-4 d-flex align-items-center">
+        <label class="form-label me-3" for="LName" style="min-width: 120px;">Last Name</label>
+        <input type="text" asp-for="LName" class="form-control form-control-lg"  />
+    </div>
+    <div class="form-outline mb-4 d-flex align-items-center">
+        <label class="form-label me-3" for="LName" style="min-width: 120px;">User Name</label>
+        <input type="text" asp-for="UserName" class="form-control form-control-lg" />
+    </div>
+    <div class="form-outline mb-4 d-flex align-items-center">
+        <label class="form-label me-3" for="Email" style="min-width: 120px;">Email</label>
+        <input type="email" asp-for="Email" class="form-control form-control-lg"  />
+    </div>
+    <div class="form-outline mb-4 d-flex align-items-center">
+        <label class="form-label me-3" for="Password" style="min-width: 120px;">Password</label>
+        <input type="password" asp-for="Password" class="form-control form-control-lg" />
+    </div>
+    <div class="form-outline mb-4 d-flex align-items-center">
+        <label class="form-label me-3" for="ConPassword" style="min-width: 120px;">Confirm Password</label>
+        <input type="password" asp-for="ConfirmPassword" class="form-control form-control-lg" />
+    </div>
+    <div class="form-outline mb-4 d-flex align-items-center">
+    <input asp-for="IsAgree" class="checkbox">
+    <span>I Agree To The Terms & Conditions</span>
+    </div>
+    <!-- Submit Button -->
+    <div class="pt-1 mb-4">
+        <button class="btn btn-dark btn-lg btn-block" type="submit">Register</button>
+    </div>
+
+    <!-- Login Link -->
+    <p class="mb-3 pb-lg-2 text-muted text-center">
+        Already have an account?
+        <a  style="color: black;" asp-action="SignIn">LOGIN Now!</a>
+    </p>
+</form>
+
+@section ValidationOnCreateEdit {
+	<partial name="_ValidationScriptsPartial" />
+}
+
