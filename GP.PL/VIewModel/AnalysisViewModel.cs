@@ -6,12 +6,12 @@ namespace GP.PL.VIewModel
     {
         public int Id { get; set; }
         public int PatientId { get; set; }
-        public DateTime Date { get; set; }
+        public DateTime Date { get; set; } = DateTime.Now;
         public IFormFile? Image { get; set; }
         public string? OriginalPhotoPath { get; set; }
         public string? ProcessedPhotoPath { get; set; }
         public string? NewNote { get; set; }
-        public List<Note> Notes { get; set; } = new List<Note>(); // Add Notes collection
+        public ICollection<Note> Notes { get; set; } = new List<Note>(); // Add Notes collection
         public float HDI_S { get; set; }
         public float HDI_A { get; set; }
         public float HDI_T { get; set; }

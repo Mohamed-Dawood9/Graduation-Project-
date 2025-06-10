@@ -23,6 +23,8 @@ namespace GP.DAL.Data.Models
         public float FAI_C7 { get;  set; }
         public float FAI_A { get;  set; }
         public float FAI_T { get;  set; }
-     
+        public int? AppointmentId { get; set; }
+        public Appointment? Appointment { get; set; }
+
     }
 }

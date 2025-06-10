@@ -65,7 +65,7 @@ namespace GP_BLL.Services
                 throw new Exception($"Python configuration failed: {ex.Message}");
             }
         }
-        private const string API_URL = "https://88e5-156-207-207-114.ngrok-free.app/daowd_3m_a3mam_alshr8yh";
+        private const string API_URL = "https://f763-156-207-252-168.ngrok-free.app/daowd_3m_a3mam_alshr8yh";
 
         public async Task<MedicalReport> ProcessBackImageAsync(string imagePath, string outputFolder)
         {

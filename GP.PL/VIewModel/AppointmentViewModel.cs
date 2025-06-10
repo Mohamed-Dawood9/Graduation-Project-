@@ -23,5 +23,7 @@ namespace GP.PL.VIewModel
         public decimal CobbAngle { get; set; } 
         public string? Diagnosis { get; set; }
         public string? NewNote { get; set; }
+        public AnalysisViewModel? Analysis { get; set; } // Added navigation property
+
     }
 }

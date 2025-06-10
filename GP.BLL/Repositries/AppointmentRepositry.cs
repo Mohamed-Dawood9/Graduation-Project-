@@ -32,5 +32,10 @@ namespace GP.BLL.Repositries
                 .Include(a => a.Notes); // Eagerly load Notes for GetAll
         }
 
+        public IQueryable<Appointment> GetAllWithAnalysis()
+        {
+            return _DbContext.Appointments.Include(a => a.Analysis).AsQueryable();
+        }
+
     }
 }

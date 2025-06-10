@@ -9,5 +9,6 @@ namespace GP.BLL.Interfaces
 {
     public interface IAnalysisInterFace: IGenericInterface<Analysis>
     {
+        
     }
 }

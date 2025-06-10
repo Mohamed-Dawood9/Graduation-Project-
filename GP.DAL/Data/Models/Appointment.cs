@@ -22,5 +22,6 @@ namespace GP.DAL.Data.Models
         public string? ProcessedPhotoPath3 { get; set; } // Third processed image
         public decimal? CobbAngle { get; set; }
         public string? Diagnosis { get; set; }
+        public Analysis Analysis { get; set; }
     }
 }

@@ -30,6 +30,9 @@ namespace GP.DAL.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
+                    b.Property<int?>("AppointmentId")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
 
@@ -64,6 +67,10 @@ namespace GP.DAL.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("AppointmentId")
+                        .IsUnique()
+                        .HasFilter("[AppointmentId] IS NOT NULL");
 
                     b.HasIndex("PatientId");
 
@@ -426,11 +433,17 @@ namespace GP.DAL.Migrations
 
             modelBuilder.Entity("GP.DAL.Data.Models.Analysis", b =>
                 {
+                    b.HasOne("GP.DAL.Data.Models.Appointment", "Appointment")
+                        .WithOne("Analysis")
+                        .HasForeignKey("GP.DAL.Data.Models.Analysis", "AppointmentId");
+
                     b.HasOne("GP.DAL.Data.Models.Patient", "Patient")
                         .WithMany()
                         .HasForeignKey("PatientId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Appointment");
 
                     b.Navigation("Patient");
                 });
@@ -532,6 +545,9 @@ namespace GP.DAL.Migrations
 
             modelBuilder.Entity("GP.DAL.Data.Models.Appointment", b =>
                 {
+                    b.Navigation("Analysis")
+                        .IsRequired();
+
                     b.Navigation("Notes");
                 });
 

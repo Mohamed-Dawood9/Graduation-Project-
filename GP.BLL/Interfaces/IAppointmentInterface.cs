@@ -9,6 +9,8 @@ namespace GP.BLL.Interfaces
 {
 	public interface IAppointmentInterface : IGenericInterface<Appointment>
 	{
-		//IQueryable<Appointment> GetEmployeesByDate(DateTime date);
-	}
+        //IQueryable<Appointment> GetEmployeesByDate(DateTime date);
+        IQueryable<Appointment> GetAllWithAnalysis();
+
+    }
 }
